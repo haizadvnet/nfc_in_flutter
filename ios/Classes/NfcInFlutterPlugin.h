@@ -19,6 +19,8 @@ API_AVAILABLE(ios(11))
     FlutterEventSink events;
     NFCNDEFReaderSession* session;
 }
+- (void)resetSession;
+
 - (void)readerSession:(nonnull NFCNDEFReaderSession *)session didInvalidateWithError:(nonnull NSError *)error;
 
 - (FlutterError * _Nullable)onListenWithArguments:(id _Nullable)arguments eventSink:(nonnull FlutterEventSink)events;
