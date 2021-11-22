@@ -88,6 +88,10 @@
                         details:nil]);
                 break;
             case NFCReaderSessionInvalidationErrorUserCanceled:
+                if (self->session == nil) {
+                    self->session = [[NFCNDEFReaderSession alloc]initWithDelegate:self queue:self->dispatchQueue invalidateAfterFirstRead: once];
+                    self->session.alertMessage = alertMessage;
+                }
                 self->events([FlutterError
                         errorWithCode:@"UserCanceledSessionError"
                         message:error.localizedDescription
