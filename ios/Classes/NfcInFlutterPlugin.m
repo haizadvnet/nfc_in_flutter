@@ -68,6 +68,11 @@
     // Since this function is called when it invalidates, the session can safely be removed.
     // A new session doesn't have to be created immediately as that will happen the next time
     // startReading() is called.
+    if (session != nil) {
+        if ([session isReady]) {
+            [session invalidateSession];
+        }
+    }
     self->session = nil;
     
     // If the event stream is closed we can't send the error
