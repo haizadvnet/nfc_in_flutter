@@ -20,6 +20,13 @@ class ExampleApp extends StatelessWidget {
           return ListView(
             children: <Widget>[
               ListTile(
+                title: const Text("NFC Supported"),
+                onTap: () async {
+                  bool supported = await NFC.isNDEFSupported;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('NFC supported = ${supported}')));
+                },
+              ),
+              ListTile(
                 title: const Text("Read NFC"),
                 onTap: () {
                   Navigator.pushNamed(context, "/read_example");
@@ -63,8 +70,7 @@ class _MyAppState extends State<MyApp> {
   void _readNFC(BuildContext context) {
     try {
       // ignore: cancel_subscriptions
-      StreamSubscription<NDEFMessage> subscription = NFC.readNDEF().listen(
-          (tag) {
+      StreamSubscription<NDEFMessage> subscription = NFC.readNDEF().listen((tag) {
         // On new tag, add it to state
         setState(() {
           _tags.insert(0, tag);
@@ -152,8 +158,7 @@ class _MyAppState extends State<MyApp> {
                   );
                 }
                 return TextButton(
-                  child:
-                      Text(_stream == null ? "Start reading" : "Stop reading"),
+                  child: Text(_stream == null ? "Start reading" : "Stop reading"),
                   onPressed: () {
                     if (_stream == null) {
                       _readNFC(context);
@@ -189,8 +194,7 @@ class _MyAppState extends State<MyApp> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text("NDEF Tag",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const Text("NDEF Tag", style: const TextStyle(fontWeight: FontWeight.bold)),
                   Builder(
                     builder: (context) {
                       // Build list of records
@@ -207,11 +211,11 @@ class _MyAppState extends State<MyApp> {
                               ),
                             ),
                             Text(
-                              _tags[index].records[i].payload,
+                              _tags[index].records[i].payload ?? "",
                               style: payloadTextStyle,
                             ),
                             Text(
-                              _tags[index].records[i].data,
+                              _tags[index].records[i].data ?? "",
                               style: payloadTextStyle,
                             ),
                           ],

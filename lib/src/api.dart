@@ -4,21 +4,20 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 
-import './exceptions.dart';
+import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
 class NFC {
   static MethodChannel _channel = MethodChannel("nfc_in_flutter");
-  static const EventChannel _eventChannel =
-      const EventChannel("nfc_in_flutter/tags");
+  static const EventChannel _eventChannel = const EventChannel("nfc_in_flutter/tags");
 
-  static Stream<dynamic>? _tagStream;
+  static Stream<NDEFMessage>? _tagStream;
 
-  static Stream<dynamic> _createTagStream() {
+  static Stream<NDEFMessage> _createTagStream() {
     return _eventChannel.receiveBroadcastStream().where((tag) {
       // In the future when more tag types are supported, this must be changed.
       assert(tag is Map);
       return tag["message_type"] == "ndef";
-    }).map<NFCMessage>((tag) {
+    }).map<NDEFMessage>((tag) {
       assert(tag is Map);
 
       List<NDEFRecord> records = [];
@@ -62,11 +61,11 @@ class NFC {
     });
   }
 
-  static void _startReadingNDEF(
-      bool once, String alertMessage, NFCReaderMode readerMode) {
+  static void _startReadingNDEF(bool once, bool readForWrite, String alertMessage, NFCReaderMode readerMode) {
     // Start reading
     Map arguments = {
       "scan_once": once,
+      "read_for_write": readForWrite,
       "alert_message": alertMessage,
       "reader_mode": readerMode.name,
     }..addAll(readerMode._options);
@@ -98,9 +97,9 @@ class NFC {
     // converted to their matching exception classes. The controller stream will
     // be closed if the errors are fatal.
     StreamController<NDEFMessage> controller = StreamController();
-    final stream = once ? _tagStream!.take(1) : _tagStream!;
+    final stream = once ? _tagStream?.take(1) : _tagStream;
     // Listen for tag reads.
-    final subscription = stream.listen(
+    final subscription = stream?.listen(
       (message) => controller.add(message),
       onError: (error) {
         error = _mapException(error);
@@ -119,14 +118,15 @@ class NFC {
       // was sent to the controller stream
     );
     controller.onCancel = () {
-      subscription.cancel();
+      subscription?.cancel();
     };
 
     try {
       _startReadingNDEF(
         once,
+        false,
         alertMessage,
-        const NFCNormalReaderMode(),
+        readerMode,
       );
     } on PlatformException catch (err) {
       if (err.code == "NFCMultipleReaderModes") {
@@ -166,7 +166,7 @@ class NFC {
     StreamController<NDEFTag> controller = StreamController();
 
     int writes = 0;
-    final stream = _tagStream!.listen(
+    final stream = _tagStream?.listen(
       (msg) async {
         NDEFMessage message = msg;
         if (message.tag.writable) {
@@ -199,11 +199,11 @@ class NFC {
       // was sent to the controller stream
     );
     controller.onCancel = () {
-      stream.cancel();
+      stream?.cancel();
     };
 
     try {
-      _startReadingNDEF(once, message, readerMode);
+      _startReadingNDEF(once, true, message, readerMode);
     } on PlatformException catch (err) {
       if (err.code == "NFCMultipleReaderModes") {
         throw NFCMultipleReaderModesException();
@@ -352,10 +352,10 @@ enum NFCTypeNameFormat {
 
 class NDEFRecord {
   final String? id;
-  final String payload;
-  final String type;
-  final String data;
-  final NFCTypeNameFormat tnf;
+  final String? payload;
+  final String? type;
+  final String? data;
+  final NFCTypeNameFormat? tnf;
 
   /// languageCode will be the language code of a well known text record. If the
   /// record is not created with the well known TNF and Text RTD, this will be
