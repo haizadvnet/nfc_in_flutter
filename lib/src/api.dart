@@ -11,6 +11,7 @@ class NFC {
   static const EventChannel _eventChannel = const EventChannel("nfc_in_flutter/tags");
 
   static Stream<NDEFMessage>? _tagStream;
+  static StreamController<NDEFTag>? controller;
 
   static Stream<NDEFMessage> _createTagStream() {
     return _eventChannel.receiveBroadcastStream().where((tag) {
@@ -163,7 +164,7 @@ class NFC {
   }) {
     _tagStream ??= _createTagStream();
 
-    StreamController<NDEFTag> controller = StreamController();
+    controller = StreamController();
 
     int writes = 0;
     final stream = _tagStream?.listen(
@@ -173,32 +174,32 @@ class NFC {
           try {
             await message.tag.write(newMessage);
           } catch (err) {
-            controller.addError(err);
-            controller.close();
+            controller!.addError(err);
+            controller!.close();
             return;
           }
           writes++;
-          controller.add(message.tag);
+          controller!.add(message.tag);
         }
 
         if (once && writes > 0) {
-          controller.close();
+          controller!.close();
         }
       },
       onError: (error) {
         error = _mapException(error);
-        controller.addError(error);
-        controller.close();
+        controller!.addError(error);
+        controller!.close();
       },
       onDone: () async {
         _tagStream = null;
-        await controller.close();
+        await controller!.close();
       },
       // cancelOnError: false
       // cancelOnError cannot be used as the stream would cancel BEFORE the error
       // was sent to the controller stream
     );
-    controller.onCancel = () {
+    controller!.onCancel = () {
       stream?.cancel();
     };
 
@@ -211,7 +212,11 @@ class NFC {
       throw err;
     }
 
-    return controller.stream;
+    return controller!.stream;
+  }
+
+  static void cancelWriting() {
+    controller?.close();
   }
 
   /// isNDEFSupported checks if the device supports reading NDEF tags
