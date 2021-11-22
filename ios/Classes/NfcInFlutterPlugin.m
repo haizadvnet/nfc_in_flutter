@@ -68,7 +68,7 @@
     // Since this function is called when it invalidates, the session can safely be removed.
     // A new session doesn't have to be created immediately as that will happen the next time
     // startReading() is called.
-    self->session = [[NFCNDEFReaderSession alloc]initWithDelegate:self queue:self->dispatchQueue invalidateAfterFirstRead: true];
+    self->session = [[NFCNDEFReaderSession alloc]initWithDelegate:super queue:super->dispatchQueue invalidateAfterFirstRead: true];
     
     // If the event stream is closed we can't send the error
     if (self->events == nil) {
