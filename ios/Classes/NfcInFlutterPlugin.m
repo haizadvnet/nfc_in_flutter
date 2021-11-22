@@ -88,7 +88,7 @@
                         details:nil]);
                 break;
             case NFCReaderSessionInvalidationErrorUserCanceled:
-                [self resetSession]
+                [self resetSession];
                 self->events([FlutterError
                         errorWithCode:@"UserCanceledSessionError"
                         message:error.localizedDescription
@@ -423,6 +423,9 @@
     
     return [[NFCNDEFMessage alloc] initWithNDEFRecords:ndefRecords];
 }
+
+
+- (void)resetSession { }
 
 @end
 
