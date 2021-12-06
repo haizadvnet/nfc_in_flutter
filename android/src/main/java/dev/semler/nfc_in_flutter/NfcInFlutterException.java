@@ -1,6 +1,6 @@
 package dev.semler.nfc_in_flutter;
 
-class NfcInFlutterException extends Exception {
+public class NfcInFlutterException extends Exception {
     String code;
     String message;
     Object details;

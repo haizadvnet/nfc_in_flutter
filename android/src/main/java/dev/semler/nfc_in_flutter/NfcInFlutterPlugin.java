@@ -11,9 +11,12 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -39,6 +42,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * NfcInFlutterPlugin
  */
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class NfcInFlutterPlugin implements MethodCallHandler,
         EventChannel.StreamHandler,
         PluginRegistry.NewIntentListener,
