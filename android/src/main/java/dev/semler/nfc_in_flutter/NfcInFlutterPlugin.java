@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.io.IOException;
@@ -42,12 +43,10 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * NfcInFlutterPlugin
  */
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class NfcInFlutterPlugin implements MethodCallHandler,
         EventChannel.StreamHandler,
         PluginRegistry.NewIntentListener,
-        NfcAdapter.ReaderCallback,
-        NfcAdapter.OnTagRemovedListener {
+        NfcAdapter.ReaderCallback {
 
     private static final String NORMAL_READER_MODE = "normal";
     private static final String DISPATCH_READER_MODE = "dispatch";
@@ -63,9 +62,9 @@ public class NfcInFlutterPlugin implements MethodCallHandler,
     private Tag lastTag = null;
     private boolean writeIgnore = false;
 
-    @Override
-    public void onTagRemoved() {
-    }
+    @SuppressWarnings("newApi")
+    @Nullable
+    NfcAdapter.OnTagRemovedListener tagRemovedListener;
 
     /**
      * Plugin registration.
@@ -81,6 +80,14 @@ public class NfcInFlutterPlugin implements MethodCallHandler,
 
     private NfcInFlutterPlugin(Activity activity) {
         this.activity = activity;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            new NfcAdapter.OnTagRemovedListener() {
+                @Override
+                public void onTagRemoved() {
+
+                }
+            };
+        }
     }
 
     @Override
@@ -226,7 +233,7 @@ public class NfcInFlutterPlugin implements MethodCallHandler,
                 }
                 eventSuccess(formatNDEFMessageToResult(ndef, message));
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && !writeIgnore) {
-                    adapter.ignore(tag, ONE_SECOND, this, null);
+                    adapter.ignore(tag, ONE_SECOND, tagRemovedListener, null);
                 }
             } catch (IOException e) {
                 Map<String, Object> details = new HashMap<>();
@@ -647,7 +654,7 @@ public class NfcInFlutterPlugin implements MethodCallHandler,
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && writeIgnore) {
                         adapter = NfcAdapter.getDefaultAdapter(activity);
                         if (adapter != null) {
-                            adapter.ignore(lastTag, ONE_SECOND, this, null);
+                            adapter.ignore(lastTag, ONE_SECOND, tagRemovedListener, null);
                         }
                     }
                 } catch (IOException e) {

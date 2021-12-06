@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
-import './read_example_screen.dart';
-import './write_example_screen.dart';
+import 'read_example_screen.dart';
+import 'write_example_screen.dart';
 
 void main() => runApp(ExampleApp());
 
