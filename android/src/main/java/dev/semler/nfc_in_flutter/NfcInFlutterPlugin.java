@@ -163,6 +163,7 @@ public class NfcInFlutterPlugin implements MethodCallHandler,
     private Boolean nfcIsEnabled() {
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
         if (adapter == null) return false;
+        try { adapter.isEnabled(); } catch (Exception ignore) {}
         return adapter.isEnabled();
     }
 
@@ -170,6 +171,7 @@ public class NfcInFlutterPlugin implements MethodCallHandler,
         adapter = NfcAdapter.getDefaultAdapter(activity);
         if (adapter == null) return;
         Bundle bundle = new Bundle();
+        bundle.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 2000);
         int flags = DEFAULT_READER_FLAGS;
         if (noSounds) {
             flags = flags | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
