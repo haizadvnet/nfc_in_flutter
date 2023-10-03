@@ -63,8 +63,8 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,
     private MethodChannel channel;
     private boolean writeIgnore = false;
 
-    @SuppressWarnings("newApi")
-    @Nullable
+    // @SuppressWarnings("newApi")
+    // @Nullable
     NfcAdapter.OnTagRemovedListener tagRemovedListener;
 
 
