@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -43,7 +45,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * NfcInFlutterPlugin
  */
-public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,
+public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,ActivityAware,
         EventChannel.StreamHandler,
         PluginRegistry.NewIntentListener,
         NfcAdapter.ReaderCallback {
@@ -70,8 +72,10 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-        channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_plugin");
+        channel = new MethodChannel(binding.getBinaryMessenger(), "nfc_in_flutter");
+        final EventChannel tagChannel = new EventChannel(binding.getBinaryMessenger(), "nfc_in_flutter/tags");
         channel.setMethodCallHandler(this);
+        tagChannel.setStreamHandler(this);
         adapter = NfcAdapter.getDefaultAdapter(binding.getApplicationContext());
     }
 
@@ -82,13 +86,26 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,
     /**
      * Plugin registration.
      */
-    public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "nfc_in_flutter");
-        final EventChannel tagChannel = new EventChannel(registrar.messenger(), "nfc_in_flutter/tags");
-        NfcInFlutterPlugin plugin = new NfcInFlutterPlugin(registrar.activity());
-        registrar.addNewIntentListener(plugin);
-        channel.setMethodCallHandler(plugin);
-        tagChannel.setStreamHandler(plugin);
+    @Override
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        Log.e("ICIIII", "ICIIIII22222");
+        activity = binding.getActivity();
+    }
+
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        Log.e("ICIIII", "ICIIIII33333");
+        activity = binding.getActivity();
+    }
+
+    @Override
+    public void onDetachedFromActivity() {
+
     }
 
     private NfcInFlutterPlugin(Activity activity) {
