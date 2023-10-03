@@ -56,7 +56,7 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
     private final int DEFAULT_READER_FLAGS = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B | NfcAdapter.FLAG_READER_NFC_F | NfcAdapter.FLAG_READER_NFC_V;
     private static final String LOG_TAG = "NfcInFlutterPlugin";
 
-    private final Activity activity;
+    private Activity activity;
     private NfcAdapter adapter;
     private EventChannel.EventSink events;
 
