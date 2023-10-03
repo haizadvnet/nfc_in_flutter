@@ -108,17 +108,17 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
 
     }
 
-    private NfcInFlutterPlugin(Activity activity) {
-        this.activity = activity;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            new NfcAdapter.OnTagRemovedListener() {
-                @Override
-                public void onTagRemoved() {
+    // private NfcInFlutterPlugin(Activity activity) {
+    //     this.activity = activity;
+    //     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    //         new NfcAdapter.OnTagRemovedListener() {
+    //             @Override
+    //             public void onTagRemoved() {
 
-                }
-            };
-        }
-    }
+    //             }
+    //         };
+    //     }
+    // }
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
