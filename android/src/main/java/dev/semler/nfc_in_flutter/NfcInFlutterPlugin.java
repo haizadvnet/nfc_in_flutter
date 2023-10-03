@@ -16,8 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -32,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -43,7 +43,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * NfcInFlutterPlugin
  */
-public class NfcInFlutterPlugin implements MethodCallHandler,
+public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,
         EventChannel.StreamHandler,
         PluginRegistry.NewIntentListener,
         NfcAdapter.ReaderCallback {
@@ -60,12 +60,25 @@ public class NfcInFlutterPlugin implements MethodCallHandler,
 
     private String currentReaderMode = null;
     private Tag lastTag = null;
+    private MethodChannel channel;
     private boolean writeIgnore = false;
 
     @SuppressWarnings("newApi")
     @Nullable
     NfcAdapter.OnTagRemovedListener tagRemovedListener;
 
+
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_plugin");
+        channel.setMethodCallHandler(this);
+        adapter = NfcAdapter.getDefaultAdapter(binding.getApplicationContext());
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        channel.setMethodCallHandler(null);
+    }
     /**
      * Plugin registration.
      */
