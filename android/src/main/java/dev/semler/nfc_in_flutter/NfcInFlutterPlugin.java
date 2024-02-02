@@ -236,7 +236,12 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
         if (adapter != null) {
             switch (currentReaderMode) {
                 case NORMAL_READER_MODE:
-                    adapter.disableReaderMode(activity);
+
+                    try { adapter.disableReaderMode(activity); } catch (Exception ignore) {
+                        Log.e(LOG_TAG, "problem...: " + ignore);
+                    }
+
+                    // adapter.disableReaderMode(activity);
                     break;
                 case DISPATCH_READER_MODE:
                     adapter.disableForegroundDispatch(activity);
