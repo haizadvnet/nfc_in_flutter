@@ -22,7 +22,7 @@ class ExampleApp extends StatelessWidget {
               ListTile(
                 title: const Text("NFC Supported"),
                 onTap: () async {
-                  bool supported = await NFC.isNDEFSupported;
+                  int supported = await NFC.isNDEFSupported;
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('NFC supported = ${supported}')));
                 },
               ),

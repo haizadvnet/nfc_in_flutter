@@ -220,10 +220,10 @@ class NFC {
   }
 
   /// isNDEFSupported checks if the device supports reading NDEF tags
-  static Future<bool> get isNDEFSupported async {
+  static Future<int> get isNDEFSupported async {
     final supported = await _channel.invokeMethod("readNDEFSupported");
-    assert(supported is bool);
-    return supported as bool;
+    assert(supported is int);
+    return supported as int;
   }
 }
 

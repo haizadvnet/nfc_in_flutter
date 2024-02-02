@@ -1,3 +1,7 @@
+## BREAKCHANGE
+- Change `isNDEFSupported` return to `int` 1=supported , 0=not supported, 2=error (DeadObjectException)
+
+
 ## 2.0.6
 -   Flutter 2.0 null safety.  This is the first update for null safety so may not fully function.
 

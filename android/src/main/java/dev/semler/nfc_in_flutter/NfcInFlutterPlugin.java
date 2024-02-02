@@ -190,11 +190,16 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
         }
     }
 
-    private Boolean nfcIsEnabled() {
+    private int nfcIsEnabled() {
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
-        if (adapter == null) return false;
+        if (adapter == null) return 0;
+
+        //to minimize issue NFC Service to become dead after some time
         try { adapter.isEnabled(); } catch (Exception ignore) {}
-        return adapter.isEnabled();
+        try { adapter.isEnabled(); } catch (Exception ignore) {
+            return 2;
+        }
+        return adapter.isEnabled() == true ? 1 : 0;
     }
 
     private void startReading(boolean noSounds) {
