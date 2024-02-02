@@ -197,10 +197,24 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
 
         if (adapter != null) {
-            try { adapter.disableReaderMode(activity); } catch (Exception error) {
+            boolean enable = false;
+            try { 
+                enable = adapter.isEnabled();
+             } catch (Exception ignore) {
+            }
+            try { 
+                enable = adapter.isEnabled();
+             } catch (Exception ignore) {
+            }
+
+            if(enable == true){
+                try { adapter.disableReaderMode(activity); } catch (Exception error) {
+                    return false;
+                }
+                return true;
+            }else{
                 return false;
             }
-            return true;
         }else{
             return false;
         }
