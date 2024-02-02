@@ -126,6 +126,9 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
             case "readNDEFSupported":
                 result.success(nfcIsEnabled());
                 break;
+            case "disableReaderMode":
+                result.success(disableReaderMode());
+                break;
             case "startNDEFReading":
                 if (!(call.arguments instanceof HashMap)) {
                     result.error("MissingArguments", "startNDEFReading was called with no arguments", "");
@@ -190,6 +193,21 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
         }
     }
 
+    private boolean disableReaderMode() {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
+
+        if (adapter != null) {
+            try { adapter.disableReaderMode(activity); } catch (Exception error) {
+                return false;
+            }
+            return true;
+        }else{
+            return false;
+        }
+
+        
+    }
+    
     private int nfcIsEnabled() {
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
         if (adapter == null) return 0;

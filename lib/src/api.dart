@@ -225,6 +225,12 @@ class NFC {
     assert(supported is int);
     return supported as int;
   }
+
+  static Future<bool> get clearReader async {
+    final supported = await _channel.invokeMethod("disableReaderMode");
+    assert(supported is bool);
+    return supported as bool;
+  }
 }
 
 /// NFCReaderMode is an interface for different reading modes
