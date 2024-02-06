@@ -62,7 +62,7 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
 
     private String currentReaderMode = null;
     private Tag lastTag = null;
-    private MethodChannel channel;
+    // private MethodChannel channel;
     private boolean writeIgnore = false;
 
     // @SuppressWarnings("newApi")
@@ -72,16 +72,19 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-        channel = new MethodChannel(binding.getBinaryMessenger(), "nfc_in_flutter");
+
+        final MethodChannel methodChannel = new MethodChannel(binding.getBinaryMessenger(), "nfc_in_flutter");
+        //channel = new MethodChannel(binding.getBinaryMessenger(), "nfc_in_flutter");
         final EventChannel tagChannel = new EventChannel(binding.getBinaryMessenger(), "nfc_in_flutter/tags");
-        channel.setMethodCallHandler(this);
+        methodChannel.setMethodCallHandler(this);
         tagChannel.setStreamHandler(this);
         adapter = NfcAdapter.getDefaultAdapter(binding.getApplicationContext());
     }
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        channel.setMethodCallHandler(null);
+        final MethodChannel methodChannel = new MethodChannel(binding.getBinaryMessenger(), "nfc_in_flutter");
+        methodChannel.setMethodCallHandler(null);
     }
     /**
      * Plugin registration.
