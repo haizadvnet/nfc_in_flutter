@@ -226,20 +226,14 @@ class NFC {
     return supported as int;
   }
 
-  static Future<bool> get clearReader async {
+  static Future<bool> get disableReaderMode async {
     final supported = await _channel.invokeMethod("disableReaderMode");
     assert(supported is bool);
     return supported as bool;
   }
-
-  static Future<bool> get enableNFC async {
-    final supported = await _channel.invokeMethod("enableNFC");
-    assert(supported is bool);
-    return supported as bool;
-  }
-
-  static Future<bool> get disableNFC async {
-    final supported = await _channel.invokeMethod("disableNFC");
+  
+  static Future<bool> get enableReaderMode async {
+    final supported = await _channel.invokeMethod("enableReaderMode");
     assert(supported is bool);
     return supported as bool;
   }
