@@ -130,8 +130,8 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
                 result.success(nfcIsEnabled());
                 break;
             case "enableReaderMode":
-                boolean noSounds = (boolean) args.get("no_platform_sounds");
-                startReading(noSounds);
+                // startReading(false);
+                result.success(enableReaderMode());
                 break;
             case "disableReaderMode":
                 result.success(disableReaderMode());
@@ -200,6 +200,14 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
         }
     }
 
+    private boolean enableReaderMode() {
+        try { 
+        startReading(false);
+        return true;
+        } catch (Exception error) {
+            return false;
+        }
+    }
     private boolean disableReaderMode() {
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
 
