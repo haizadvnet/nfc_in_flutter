@@ -129,6 +129,12 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
             case "readNDEFSupported":
                 result.success(nfcIsEnabled());
                 break;
+            case "enableNFC":
+                result.success(enableNFC());
+                break;
+            case "disableNFC":
+                result.success(disableNFC());
+                break;
             case "disableReaderMode":
                 result.success(disableReaderMode());
                 break;
@@ -235,6 +241,24 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
             return 2;
         }
         return adapter.isEnabled() == true ? 1 : 0;
+    }
+
+    private boolean enableNFC() {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
+        if (adapter == null) return false;
+
+        try { adapter.enable();return true; } catch (Exception ignore) {
+            return false;
+        }
+    }
+    
+    private boolean disableNFC() {
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
+        if (adapter == null) return false;
+
+        try { adapter.disable();return true; } catch (Exception ignore) {
+            return false;
+        }
     }
 
     private void startReading(boolean noSounds) {
