@@ -253,7 +253,7 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
         adapter = NfcAdapter.getDefaultAdapter(activity);
         if (adapter == null) return;
         Bundle bundle = new Bundle();
-        bundle.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 2000);
+        bundle.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 5000);
         int flags = DEFAULT_READER_FLAGS;
         if (noSounds) {
             flags = flags | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
