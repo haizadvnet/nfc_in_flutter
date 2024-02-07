@@ -231,6 +231,18 @@ class NFC {
     assert(supported is bool);
     return supported as bool;
   }
+
+  static Future<bool> get enableNFC async {
+    final supported = await _channel.invokeMethod("enableNFC");
+    assert(supported is bool);
+    return supported as bool;
+  }
+
+  static Future<bool> get disableNFC async {
+    final supported = await _channel.invokeMethod("disableNFC");
+    assert(supported is bool);
+    return supported as bool;
+  }
 }
 
 /// NFCReaderMode is an interface for different reading modes
