@@ -81,7 +81,7 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Record", style: Theme.of(context).textTheme.bodyText1),
+                  Text("Record", style: Theme.of(context).textTheme.bodyLarge),
                   TextFormField(
                     controller: record.mediaTypeController,
                     decoration: InputDecoration(

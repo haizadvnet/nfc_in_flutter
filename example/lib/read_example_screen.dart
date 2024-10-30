@@ -9,6 +9,9 @@ class ReadExampleScreen extends StatefulWidget {
 
 class _ReadExampleScreenState extends State<ReadExampleScreen> {
   StreamSubscription<NDEFMessage>? _stream;
+  
+  String datani = '';
+  String datano = '';
 
   void _startScanning() {
     setState(() {
@@ -21,6 +24,11 @@ class _ReadExampleScreenState extends State<ReadExampleScreen> {
         }
         print("Read NDEF message with ${message.records.length} records");
         for (NDEFRecord record in message.records) {
+
+          setState(() {
+            datani = record.payload ?? '';
+            datano = record.data ?? '';
+          });
           print(
               "Record '${record.id ?? "[NO ID]"}' with TNF '${record.tnf}', type '${record.type}', payload '${record.payload}' and data '${record.data}' and language code '${record.languageCode}'");
         }
@@ -70,11 +78,13 @@ class _ReadExampleScreenState extends State<ReadExampleScreen> {
       appBar: AppBar(
         title: const Text("Read NFC example"),
       ),
-      body: Center(
+      body: Column(
+        children:[
+        Center(
           child: ElevatedButton(
         child: const Text("Toggle scan"),
         onPressed: _toggleScan,
-      )),
+      )),Text(datani),Text(datano)]),
     );
   }
 }
