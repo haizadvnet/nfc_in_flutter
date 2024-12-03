@@ -358,7 +358,7 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag.class);
             } else {
-                tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG);
             }
 
             if (tag != null) {
