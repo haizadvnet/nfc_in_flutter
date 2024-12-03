@@ -352,10 +352,20 @@ public class NfcInFlutterPlugin implements FlutterPlugin,MethodCallHandler,Activ
     public boolean onNewIntent(Intent intent) {
         String action = intent.getAction();
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            lastTag = tag;
-            handleNDEFTagFromIntent(tag);
-            return true;
+
+            Tag tag;
+            // Use the new method for API 33+ and fallback for older versions.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag.class);
+            } else {
+                tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            }
+
+            if (tag != null) {
+                lastTag = tag;
+                handleNDEFTagFromIntent(tag);
+                return true;
+            }
         }
         return false;
     }
